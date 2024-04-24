@@ -1,5 +1,4 @@
 "use client";
-
 import { useUIState, useActions } from "ai/rsc";
 import { AI } from "@/app/server-actions/prompt-action";
 import InputPrompt from "@/components/forms/input-prompt";
@@ -23,6 +22,7 @@ export default function Page() {
       ...currentMessages,
       {
         id: Date.now(),
+        role: "user",
         display: <div>{data.prompt}</div>,
       },
     ]);
@@ -58,7 +58,7 @@ export default function Page() {
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col gap-2">
-                  <p>AI Model</p>
+                  <p>{message.role}</p>
                   <p>{message.display}</p>
                 </div>
               </div>
