@@ -117,16 +117,4 @@ export const navItems: NavItem[] = [
     icon: "dashboard",
     label: "Dashboard",
   },
-  {
-    title: "Profile",
-    href: "/dashboard/profile",
-    icon: "profile",
-    label: "profile",
-  },
-  {
-    title: "Login",
-    href: "/",
-    icon: "login",
-    label: "login",
-  },
 ];
