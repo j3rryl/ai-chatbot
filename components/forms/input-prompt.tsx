@@ -13,15 +13,17 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Textarea } from "../ui/textarea";
-import { MessageResult } from "@/types/message";
 
 const formSchema = z.object({
   prompt: z.string(),
 });
 
 type InputFormValue = z.infer<typeof formSchema>;
-
-export default function InputPrompt() {
+type SubmitFunction = (data: InputFormValue) => void;
+interface InputPromptProps {
+  onSubmit: SubmitFunction;
+}
+const InputPrompt: React.FC<InputPromptProps> = ({ onSubmit }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const defaultValues = {
     prompt: "How may I help you today?",
@@ -30,26 +32,6 @@ export default function InputPrompt() {
     resolver: zodResolver(formSchema),
     defaultValues,
   });
-
-  const onSubmit = async (data: InputFormValue) => {
-    try {
-      setLoading(true);
-      const result = await fetch("/api/v1/chat", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        method: "POST",
-      });
-      const message: MessageResult = await result.json();
-      alert(message.message);
-    } catch (error) {
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-    }
-  };
 
   return (
     <>
@@ -86,4 +68,6 @@ export default function InputPrompt() {
       </Form>
     </>
   );
-}
+};
+
+export default InputPrompt;

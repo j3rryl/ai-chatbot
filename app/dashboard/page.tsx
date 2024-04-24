@@ -42,9 +42,7 @@ export default async function Page() {
           );
         })}
       </ScrollArea>
-      <div>
-        <InputPrompt />
-      </div>
+      <div>{/* <InputPrompt /> */}</div>
     </div>
   );
 }
