@@ -13,30 +13,42 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Textarea } from "../ui/textarea";
+import { MessageResult } from "@/types/message";
 
 const formSchema = z.object({
   prompt: z.string(),
 });
 
-type UserFormValue = z.infer<typeof formSchema>;
+type InputFormValue = z.infer<typeof formSchema>;
 
 export default function InputPrompt() {
   const [loading, setLoading] = useState<boolean>(false);
   const defaultValues = {
     prompt: "How may I help you today?",
   };
-  const form = useForm<UserFormValue>({
+  const form = useForm<InputFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
-  const onSubmit = async (data: UserFormValue) => {
-    setLoading(true);
-    alert("Hello User!" + data.prompt);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
+  const onSubmit = async (data: InputFormValue) => {
+    try {
+      setLoading(true);
+      const result = await fetch("/api/v1/chat", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        method: "POST",
+      });
+      const message: MessageResult = await result.json();
+      alert(message.message);
+    } catch (error) {
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
   };
 
   return (
