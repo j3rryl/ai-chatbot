@@ -7,12 +7,12 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CommandIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { Textarea } from "../ui/textarea";
 
 const formSchema = z.object({
   prompt: z.string(),
@@ -54,8 +54,8 @@ export default function InputPrompt() {
                 <FormItem>
                   {/* <FormLabel>Email</FormLabel> */}
                   <FormControl>
-                    <Input
-                      type="text"
+                    <Textarea
+                      rows={1}
                       placeholder="Howdy' mate?"
                       disabled={loading}
                       {...field}
