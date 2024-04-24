@@ -7,10 +7,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { CommandIcon } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import * as z from "zod";
 import { Textarea } from "../ui/textarea";
 
@@ -22,17 +20,14 @@ type InputFormValue = z.infer<typeof formSchema>;
 type SubmitFunction = (data: InputFormValue) => void;
 interface InputPromptProps {
   onSubmit: SubmitFunction;
+  loading: boolean;
+  form: UseFormReturn<InputFormValue>;
 }
-const InputPrompt: React.FC<InputPromptProps> = ({ onSubmit }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const defaultValues = {
-    prompt: "How may I help you today?",
-  };
-  const form = useForm<InputFormValue>({
-    resolver: zodResolver(formSchema),
-    defaultValues,
-  });
-
+const InputPrompt: React.FC<InputPromptProps> = ({
+  onSubmit,
+  loading,
+  form,
+}) => {
   return (
     <>
       <Form {...form}>

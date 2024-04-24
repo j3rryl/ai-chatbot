@@ -5,34 +5,51 @@ import InputPrompt from "@/components/forms/input-prompt";
 import * as z from "zod";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function Page() {
+  const [loading, setLoading] = useState<boolean>(false);
   const [messages, setMessages] = useUIState<typeof AI>();
   const { submitUserMessage } = useActions<typeof AI>();
   const formSchema = z.object({
     prompt: z.string(),
   });
   type InputFormValue = z.infer<typeof formSchema>;
-
+  const defaultValues = {
+    prompt: "",
+  };
+  const form = useForm<InputFormValue>({
+    resolver: zodResolver(formSchema),
+    defaultValues,
+  });
   const onSubmit = async (data: InputFormValue) => {
     // e.preventDefault();
 
     // Add user message to UI state
-    setMessages((currentMessages: any) => [
-      ...currentMessages,
-      {
-        id: Date.now(),
-        role: "user",
-        display: <div>{data.prompt}</div>,
-      },
-    ]);
+    try {
+      setLoading(true);
+      setMessages((currentMessages: any) => [
+        ...currentMessages,
+        {
+          id: Date.now(),
+          role: "user",
+          display: <div>{data.prompt}</div>,
+        },
+      ]);
 
-    // Submit and get response message
-    const responseMessage = await submitUserMessage(data.prompt);
-    setMessages((currentMessages: any) => [
-      ...currentMessages,
-      responseMessage,
-    ]);
+      // Submit and get response message
+      const responseMessage = await submitUserMessage(data.prompt);
+      setMessages((currentMessages: any) => [
+        ...currentMessages,
+        responseMessage,
+      ]);
+      form.reset({ prompt: "" });
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <>
@@ -66,7 +83,7 @@ export default function Page() {
           })}
         </ScrollArea>
         <div>
-          <InputPrompt onSubmit={onSubmit} />
+          <InputPrompt onSubmit={onSubmit} loading={loading} form={form} />
         </div>
       </div>
     </>
