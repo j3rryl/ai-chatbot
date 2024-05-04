@@ -1,11 +1,12 @@
 "use server";
 
 import { createStreamableUI } from "ai/rsc";
+import LoadingSkeleton from "../loading";
 
 export async function getWeather() {
   const weatherUI = createStreamableUI();
 
-  weatherUI.update(<div style={{ color: "gray" }}>Loading...</div>);
+  weatherUI.update(<LoadingSkeleton />);
 
   setTimeout(() => {
     weatherUI.done(<div>It is a sunny day!</div>);
